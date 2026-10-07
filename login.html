@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الدخول | تِك ستور</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="login-card">
+      <a class="logo" href="index.html" style="text-decoration:none">تِك <span>ستور</span> ⚡</a>
+      <div class="tabs">
+        <button class="tab active" id="tabLogin" onclick="switchTab('login')">تسجيل الدخول</button>
+        <button class="tab" id="tabReg" onclick="switchTab('reg')">حساب جديد</button>
+      </div>
+      <div class="form-grid" id="loginForm">
+        <label>البريد الإلكتروني<input id="lEmail" type="email" placeholder="you@mail.com" /></label>
+        <label>كلمة المرور<input id="lPass" type="password" placeholder="••••••" /></label>
+        <button class="btn btn-big btn-block" onclick="doLogin()">دخول 🚀</button>
+      </div>
+      <div class="form-grid" id="regForm" style="display:none">
+        <label>الاسم<input id="rName" placeholder="اسمك بالكامل" /></label>
+        <label>البريد الإلكتروني<input id="rEmail" type="email" placeholder="you@mail.com" /></label>
+        <label>كلمة المرور (6 أحرف على الأقل)<input id="rPass" type="password" placeholder="••••••" /></label>
+        <button class="btn btn-big btn-block" onclick="doRegister()">إنشاء الحساب ✨</button>
+      </div>
+      <div class="hint">🔑 حساب الأدمن التجريبي:<br><b dir="ltr">admin@store.com / admin123</b></div>
+      <p style="text-align:center"><a href="index.html">→ الرجوع للمتجر</a></p>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="config.js"></script>
+  <script>
+    const API = window.API_BASE || "http://localhost:8000";
+    const $ = (id) => document.getElementById(id);
+    function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2600); }
+    function switchTab(which) {
+      $("loginForm").style.display = which === "login" ? "grid" : "none";
+      $("regForm").style.display = which === "reg" ? "grid" : "none";
+      $("tabLogin").classList.toggle("active", which === "login");
+      $("tabReg").classList.toggle("active", which === "reg");
+    }
+    function saveAndGo(d) {
+      localStorage.setItem("token", d.access_token);
+      localStorage.setItem("user", JSON.stringify(d.user));
+      toast("أهلاً " + d.user.name + " 👋");
+      setTimeout(() => location.href = d.user.is_admin ? "admin.html" : "index.html", 700);
+    }
+    async function doLogin() {
+      const r = await fetch(`${API}/api/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: $("lEmail").value.trim(), password: $("lPass").value }) });
+      const d = await r.json();
+      if (!r.ok) return toast(d.detail || "فشل الدخول");
+      saveAndGo(d);
+    }
+    async function doRegister() {
+      const r = await fetch(`${API}/api/auth/register`, { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: $("rName").value.trim(), email: $("rEmail").value.trim(), password: $("rPass").value }) });
+      const d = await r.json();
+      if (!r.ok) return toast(d.detail || "فشل إنشاء الحساب");
+      saveAndGo(d);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الداش بورد | تِك ستور</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">تِك <span>ستور</span> ⚡</a>
+      <b>لوحة التحكم</b>
+      <nav class="nav-links" style="margin-right:auto">
+        <a class="btn btn-ghost" href="index.html">المتجر</a>
+        <button class="btn btn-ghost" onclick="logout()">خروج</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('dash',this)">📊 الداش بورد</button>
+      <button class="tab" onclick="showTab('products',this)">📦 المنتجات</button>
+      <button class="tab" onclick="showTab('orders',this)">🧾 الطلبات</button>
+      <button class="tab" onclick="showTab('home',this)">🏠 أقسام الرئيسية</button>
+    </div>
+
+    <!-- الداش بورد -->
+    <section id="tab-dash">
+      <h2>🧪 جزء 1: تجربة العميل <small style="color:var(--muted);font-size:14px">(عدد الزيارات + الإضافة للسلة — من قاعدة البيانات)</small></h2>
+      <div class="stats-grid" id="cxStats"></div>
+      <div class="panel"><h3>الزيارات اليومية (آخر 14 يوم)</h3><div id="visitsChart"></div></div>
+      <div class="panel"><h3>الأكثر إضافة للسلة</h3><div id="topAdded"></div></div>
+
+      <h2>🏪 جزء 2: تشغيل الاستور <small style="color:var(--muted);font-size:14px">(المبيعات + الإلغاءات — من جدول الطلبات)</small></h2>
+      <div class="stats-grid" id="storeStats"></div>
+      <div class="panel"><h3>الإيراد اليومي (آخر 14 يوم)</h3><div id="revenueChart"></div></div>
+      <div class="panel"><h3>الأكثر مبيعاً</h3><div id="topSelling"></div></div>
+      <div class="panel"><h3>⚠️ مخزون منخفض</h3><div id="lowStock"></div></div>
+    </section>
+
+    <!-- المنتجات -->
+    <section id="tab-products" style="display:none">
+      <h2>إدارة المنتجات — إضافة / تعديل السعر والصور والمواصفات</h2>
+      <div class="panel">
+        <h3 id="pFormTitle">➕ إضافة منتج جديد</h3>
+        <div class="admin-form">
+          <input id="pName" placeholder="اسم المنتج *" />
+          <input id="pPrice" type="number" placeholder="السعر *" />
+          <input id="pOld" type="number" placeholder="السعر قبل الخصم" />
+          <input id="pImage" placeholder="رابط الصورة URL" />
+          <select id="pCat">
+            <option value="mobiles">📱 موبايلات</option>
+            <option value="laptops">💻 لابتوبات</option>
+            <option value="audio">🎧 صوتيات</option>
+            <option value="tv">📺 شاشات</option>
+            <option value="gaming">🎮 ألعاب</option>
+            <option value="accessories">⌚ إكسسوارات</option>
+          </select>
+          <input id="pBrand" placeholder="الماركة" />
+          <input id="pStock" type="number" placeholder="المخزون" />
+          <input id="pSpecs" placeholder='المواصفات: الشاشة=6.7 بوصة, الرام=8GB' />
+          <input id="pDesc" placeholder="الوصف" />
+          <label style="font-size:13px"><input type="checkbox" id="pFeat" /> مميز ⭐</label>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" id="pSaveBtn" onclick="saveProduct()">حفظ 💾</button>
+          <button class="btn btn-ghost" onclick="resetProductForm()">إلغاء</button>
+        </div>
+      </div>
+      <div class="panel"><h3>كل المنتجات</h3><div style="overflow-x:auto"><table class="data" id="productsTable"></table></div></div>
+    </section>
+
+    <!-- الطلبات -->
+    <section id="tab-orders" style="display:none">
+      <h2>الطلبات والمبيعات</h2>
+      <div class="panel"><div id="ordersList"></div></div>
+    </section>
+
+    <!-- الرئيسية -->
+    <section id="tab-home" style="display:none">
+      <h2>أقسام الصفحة الرئيسية القابلة للتعديل</h2>
+      <div id="sectionsList"></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
